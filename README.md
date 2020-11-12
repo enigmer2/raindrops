@@ -10,8 +10,10 @@
 
 Скриншот приложения
 
-![Screenshot](images/raindrops.png)
+![Screenshot](media/raindrops.png)
 - [Видеообзор игры](https://youtu.be/YDzeM8R4d24)
+- [Demo](https://www.to14.com/game.php?id=4d486a66950d8#)
+Для просмотра игры нужно разрешить flash player
 
 *В оформление игры можно вносить свои изменения с целью его улучшения*
 
