@@ -1,4 +1,17 @@
-var elem = document.documentElement;
+let score = 0;  // очки
+let speed = 0;  // скорость капель
+let level = 0;  // уровень
+let op1 = 0;    // первый операнд
+let op2 = 0;    // второй операнд
+
+function randomInteger(min, max) {
+    // случайное число от min до (max+1)
+    let rand = min + Math.random() * (max + 1 - min);
+    return Math.floor(rand);
+  }
+
+
+let elem = document.documentElement;
 
 function openFullscreen() {
   elem.requestFullscreen();
@@ -8,13 +21,13 @@ function closeFullscreen() {
 }
 
 console.clear();
-var canvas = document.querySelector('canvas');
-var canvasWraper = document.getElementById('canvas');
-var c = canvas.getContext('2d');
+let canvas = document.querySelector('canvas');
+let canvasWraper = document.getElementById('canvas');
+let c = canvas.getContext('2d');
 canvas.height = innerHeight;
 canvas.width = canvasWraper.offsetWidth;
-var ch = canvas.height,
-	 cw = canvas.width;
+let ch = canvas.height;
+let cw = canvas.width;
 
 frequency = 0.008;
 amplitude = 20;
@@ -35,9 +48,8 @@ function animate(){
     var img = new Image();   // Создаём новый объект Image
     img.src = '/media/Bunny.svg'; // Устанавливаем путь к источнику
     c.drawImage(img, innerWidth/5.4, canvas.height/2.1, 300, 300); //рисуем картинку в канвас
-   
 
-	c.beginPath();
+    c.beginPath();
 	c.moveTo(0,ch/2);
 	for(let x = 0; x < cw; x++){
 		for(let y = 7; y < 20; y++){
@@ -47,8 +59,6 @@ function animate(){
 	c.stroke();
 	c.strokeStyle = 'rgba(0,0,155, 0.5)';
     c.closePath();
-    
-
 
 	c.beginPath();
 	c.moveTo(0,ch/2);
@@ -59,13 +69,12 @@ function animate(){
 	}
 	c.stroke();
 	c.strokeStyle = 'rgba(0,0,155, 0.5)';
-	c.closePath();
-
+    c.closePath();
+    
 	increment1+= 0.05;
 	increment2 -= 0.03;
     w+=0.05
-    
-    
+     
 }
 animate();
 

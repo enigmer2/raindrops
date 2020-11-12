@@ -28,7 +28,7 @@ span {
   grid-template-rows: 50px 1fr 1fr 1fr;
   grid-template-areas:
     " canvas canvas score "
-    " canvas canvas . "
+    " canvas canvas howTo "
     " canvas canvas button "
     " canvas canvas info";
 }
@@ -36,7 +36,9 @@ header {
   position: fixed;
   padding: 10px;
 }
-
+.fullscreen{
+  grid-area: howTo;
+}
 .canvas-wrapper {
   grid-area: canvas;
 }
