@@ -11,7 +11,7 @@ body {
   background-color: cornflowerblue;
 }
 
-main{
+main {
   height: 100vh;
   width: 100%;
 }
@@ -23,7 +23,7 @@ span {
 }
 .game {
   display: grid;
- 
+
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 50px 1fr 1fr 1fr;
   grid-template-areas:
@@ -36,7 +36,7 @@ header {
   position: fixed;
   padding: 10px;
 }
-.fullscreen{
+.fullscreen {
   grid-area: howTo;
 }
 .canvas-wrapper {
@@ -57,7 +57,7 @@ header {
   padding: 20px;
   margin: 0 20px;
 }
-.info{
+.info {
   grid-area: info;
   margin: 20px 20px;
 }
@@ -104,4 +104,9 @@ header {
 }
 .btn0 {
   grid-area: nole;
+}
+
+#land,
+#sky {
+  position: absolute;
 }
