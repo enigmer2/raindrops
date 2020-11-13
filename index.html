@@ -12,7 +12,8 @@
     </header>
     <main id="game" class="game">
       <section id="canvas" class="canvas-wrapper">
-        <canvas><p>Ваш браузер не поддерживает рисование.</p></canvas>
+        <canvas id="land"><p>Ваш браузер не поддерживает рисование.</p></canvas>
+        <canvas id="sky"></canvas>
       </section>
 
       <section id="score" class="score-wrapper">
@@ -44,11 +45,25 @@
         </div>
       </section>
       <section id="info" class="info">&copy; 2020 Dzmitry Datskevich</section>
+      <section id="startScreen" class="start-screen">
+        <section class="fullscreen">
+          <button onclick="openFullscreen();">Open Fullscreen</button>
+          <button onclick="closeFullscreen();">Close Fullscreen</button>
+          <section id="options">
+            <button>выключить звук</button>
+            <button id="playButton" class="start-screen-button">play</button>
+            <button id="howButton" class="start-screen-button">how to play</button>
+          </section>
+        </section>
+      </section>
 
-      <section class="fullscreen">
-        <button onclick="openFullscreen();">Open Fullscreen</button>
-        <button onclick="closeFullscreen();">Close Fullscreen</button>
-        <section>play how to play</section>
+      <section class="audio">
+        <audio src="media/3.mp3" loop></audio>
+        <audio src="media/false.mp3"></audio>
+        <audio src="media/true.ogg"></audio>
+        <audio src="media/drop1.mp3"></audio>
+        <audio src="media/drop2.mp3"></audio>
+        <audio src="media/drop3.mp3"></audio>
       </section>
     </main>
 
