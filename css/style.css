@@ -4,12 +4,13 @@
   padding: 0;
 }
 body {
-  /*display: flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;*/
-  background-color: cornflowerblue;
+  align-items: center;
+  background-color: #6495ed;
 }
+
 
 main {
   height: 100vh;
@@ -39,6 +40,37 @@ header {
 .fullscreen {
   grid-area: howTo;
 }
+.fullscreen-on{
+  width: 50px;
+  height: 50px;
+  background: url(/media/fullscreen.svg);
+  background-repeat: no-repeat;
+  outline-style: none;
+  border: none;
+}
+.fullscreen-off{
+  width: 50px;
+  height: 50px;
+  background: url(/media/fullscreen-exit.svg);
+  background-repeat: no-repeat;
+  outline-style: none;
+  border: none;
+}
+.sound-off{
+  width: 50px;
+  height: 50px;
+  background: url(/media/SoundOff.svg);
+  background-repeat: no-repeat;
+  outline-style: none;
+  border: none;
+}
+.sound-on{  width: 50px;
+  height: 50px;
+  background: url(/media/SoundOn.svg);
+  background-repeat: no-repeat;
+  outline-style: none;
+  border: none;}
+
 .canvas-wrapper {
   grid-area: canvas;
 }
@@ -90,6 +122,7 @@ header {
   font-size: xx-large;
   padding: 10px;
   cursor: pointer;
+  border-radius: 5px;
 }
 .btnClear {
   grid-area: clr;
@@ -110,3 +143,51 @@ header {
 #sky {
   position: absolute;
 }
+
+/* \/\/\/ стиль для начального экрана \/\/\/ */
+header{
+  display: none;
+  background-color: #2fbcdb;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  text-align: center;
+  transform: all 0.5s;
+  z-index: 1;
+}
+h1 {
+  display: none;
+  position: absolute;
+  top: 0%;
+  left:10%;
+  font-size: 9em;
+  transform: all 0.5s;
+}
+.start-screen{
+  display: none;
+  z-index: 1;
+  width: 100vw;
+  position: fixed;
+  top: 50vh;
+  left: 50%;
+  transform: translateX(-20%);
+  transform: all 0.5s;
+}
+.start-screen-button{
+  font-size: 6em;
+}
+.option{
+  display: none;
+  z-index: 1;
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  transform: translateX(-20%);
+  transform: all 0.5s;
+}
+
+
+/* /\/\/\ стиль для начального экрана /\/\/\ */
