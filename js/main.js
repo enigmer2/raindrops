@@ -1,17 +1,27 @@
 let score = 0; // очки
 let HiScore = 0; // рекорд по очкам
-let speed = randomInteger(5, 10); // скорость капель
+let speed = randomInt(5, 10); // скорость капель
 let level = 0; // уровень
 let op1 = 0; // первый операнд
 let op2 = 0; // второй операнд
 let op = ""; // оператор
 let answer = 0; // ответ
-let waterLevelUp = 200; // уровень воды
+let waterLevel = 9; // уровень воды для волн
+let waterLevelUp = 100; // уровень поднятия воды для капель
 let isPlayed = false; // игра запущена или нет
+let isPaused = false; //поставлена пауза
 let isMuted = false; // звук выключен или нет
 let elem = document.documentElement;
 let canvas = document.getElementById("land");
 let canvasWraper = document.getElementById("canvas");
+
+let header = document.getElementById("header");
+let h1 = document.getElementById("h1");
+let startScreen = document.getElementById("startScreen");
+let playButton = document.getElementById("playButton");
+let howButton = document.getElementById("howButton");
+let option = document.getElementById("option");
+
 let isFullScreen = false;
 let c = canvas.getContext("2d");
 let x = 100;
@@ -27,6 +37,33 @@ amplitude = 10;
 increment1 = frequency;
 increment2 = frequency;
 w = 200.5;
+
+playButton.addEventListener("click", () => {
+  newGame();
+  console.log(isPlayed);
+});
+
+function newGame() {
+  
+  //document.location.reload();
+  waterLevelUp = 100;
+  waterLevel = 9;
+    isPlayed = true;
+  console.log(isPlayed);
+  score = 0; // сбрасываем очки
+  speed = randomInt(5, 10); // сбрасываем  скорость капель
+  level = 0; // сбрасываем  уровень
+  op1 = 0; // сбрасываем первый операнд
+  op2 = 0; // сбрасываем второй операнд
+  op = ""; // сбрасываем оператор
+    header.classList.remove("header-new-game");
+    h1.classList.remove("h1-new-game");
+    startScreen.classList.remove("start-screen-new-game");
+    playButton.classList.remove("start-screen-button-new-game");
+    howButton.classList.remove("start-screen-button-new-game");
+    option.classList.remove("option-new-game");
+    makeit();
+}
 
 // обработчик нажатия клавиш
 function buttonPress(e) {
@@ -140,7 +177,7 @@ function pause(idAudio) {
   x.pause();
 }
 
-function randomInteger(min, max) {
+function randomInt(min, max) {
   // случайное число от min до (max+1)
   let rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
@@ -165,16 +202,14 @@ function makeit() {
   // Init canvas & drops
   init();
   // Make the 3rd drop falls
-  var fall = setInterval(function () {
-    updateDrop(3);
+  var fall1 = setInterval(function () {
+    updateDrop(1);
   }, speed);
-
-  // Make the 7th drop falls
   var fall2 = setInterval(function () {
-    updateDrop(7);
+    updateDrop(2);
   }, speed);
   var fall3 = setInterval(function () {
-    updateDrop(4);
+    updateDrop(3);
   }, speed);
 
   // Stop the drop at anytime with this code :
@@ -184,7 +219,7 @@ function makeit() {
     c.beginPath();
     c.moveTo(0, ch / 2);
     for (let x = 0; x < cw; x++) {
-      for (let y = 8; y < 20; y++) {
+      for (let y = waterLevel - 1; y < 20; y++) {
         c.lineTo(
           x,
           y * 60 +
@@ -200,7 +235,7 @@ function makeit() {
     c.beginPath();
     c.moveTo(0, ch / 2);
     for (let x = 0; x < cw; x++) {
-      for (let y = 9; y < 20; y++) {
+      for (let y = waterLevel; y < 20; y++) {
         c.lineTo(
           x,
           y * 60 +
@@ -231,10 +266,23 @@ function makeit() {
     // Draw background
     drawBackground();
     // Draw drops
-    var xpos = [100, 250, 300, 400, 500, 160, 100, 110, 176];
-    var ypos = [-60, -160, -160, -20, -60, -60, -60, -60, -60];
+    var xpos = [
+      randomInt(100, 140),
+      randomInt(200, 250),
+      randomInt(300, 360),
+      400,
+    ];
+    var ypos = [
+      randomInt(-60, -150),
+      randomInt(-170, -250),
+      randomInt(-270, -360),
+      -120,
+    ];
+    var op1 = [1, 2, 3, 4];
+    var op = ["+", "-", "*", "/"];
+    var op2 = [1, 2, 3, 4];
     for (i = 0; i < xpos.length; i++) {
-      drops.push(drawDrop(xpos[i], ypos[i]));
+      drops.push(drawDrop(xpos[i], ypos[i], op1[i], op[i], op2[i]));
     }
   }
 
@@ -253,7 +301,7 @@ function makeit() {
     c.drawImage(img, innerWidth / 5.4, canvas.height / 2.1, 300, 300); //рисуем картинку в канвас
   }
 
-  function drawDrop(x, y, op1 = 52, op = "+", op2 = 60) {
+  function drawDrop(x, y, op1 = 1, op = "+", op2 = 2) {
     c.beginPath();
     c.fillStyle = "blue";
     c.moveTo(x - 60, y);
@@ -280,24 +328,51 @@ function makeit() {
     return {
       x: x,
       y: y,
+      op1: op1,
+      op: op,
+      op2: op2,
     };
   }
 
-  function updateDrop(dropNumber) {
+  function updateDrop(dropNumber, op1, op, op2) {
     var dropNumber = dropNumber - 1; //Because 0 is first
+    var op1 = op1;
+    var op = op;
+    var op2 = op2;
+    
     // Update position
     if (drops[dropNumber].y >= canvas.height - waterLevelUp) {
-      waterLevelUp += 20;
-      console.log("повысить уровень воды ");
-      console.log(waterLevelUp);
-
-      if (waterLevelUp === 500) {
+      waterLevelUp += 50;
+      waterLevel -= 1;
+      console.log("уровень воды " + waterLevelUp);
+      console.log(isPlayed);
+      if (waterLevelUp >= 360) {
+        console.log(isPlayed);
         console.log("Game over");
-        clearInterval(fall);
+        clearInterval(fall1);
         clearInterval(fall2);
         clearInterval(fall3);
+        isPlayed = false;
+        console.log(isPlayed);
+        if (!isPlayed) {
+          header.classList.add("header-new-game");
+          h1.classList.add("h1-new-game");
+          startScreen.classList.add("start-screen-new-game");
+          playButton.classList.add("start-screen-button-new-game");
+          howButton.classList.add("start-screen-button-new-game");
+          option.classList.add("option-new-game");
+          console.log(isPlayed);
+        }else{
+          header.classList.toggle("header-new-game");
+          h1.classList.toggle("h1-new-game");
+          startScreen.classList.toggle("start-screen-new-game");
+          playButton.classList.toggle("start-screen-button-new-game");
+          howButton.classList.toggle("start-screen-button-new-game");
+          option.classList.toggle("option-new-game");
+          console.log(isPlayed);
+        }
       }
-      drops[dropNumber].y = -randomInteger(60, 100);
+      drops[dropNumber].y = -randomInt(60, 100);
     } else {
       drops[dropNumber].y += 3;
     }
@@ -306,8 +381,7 @@ function makeit() {
     animateWave();
     //Draw drops
     for (i = 0; i < drops.length; i++) {
-      drawDrop(drops[i].x, drops[i].y);
+      drawDrop(drops[i].x, drops[i].y, drops[i].op1, drops[i].op, drops[i].op2);
     }
   }
 }
-window.onload = makeit;

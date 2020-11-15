@@ -36,9 +36,11 @@ span {
 header {
   position: fixed;
   padding: 10px;
+  transform: all 0.5s;
 }
 .fullscreen {
   grid-area: howTo;
+  transform: all 0.5s;
 }
 .fullscreen-on{
   width: 50px;
@@ -47,6 +49,7 @@ header {
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
+  transform: all 0.5s;
 }
 .fullscreen-off{
   width: 50px;
@@ -55,6 +58,7 @@ header {
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
+  transform: all 0.5s;
 }
 .sound-off{
   width: 50px;
@@ -63,20 +67,25 @@ header {
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
+  transform: all 0.5s;
 }
 .sound-on{  width: 50px;
   height: 50px;
   background: url(/media/SoundOn.svg);
   background-repeat: no-repeat;
   outline-style: none;
-  border: none;}
+  border: none;
+  transform: all 0.5s;
+}
 
 .canvas-wrapper {
   grid-area: canvas;
+  transform: all 0.5s;
 }
 .button-wrapper {
   grid-area: button;
   margin: 0 20px;
+  transform: all 0.5s;
 }
 .score-wrapper {
   grid-area: score;
@@ -88,10 +97,12 @@ header {
   border: darkblue;
   padding: 20px;
   margin: 0 20px;
+  transform: all 0.5s;
 }
 .info {
   grid-area: info;
   margin: 20px 20px;
+  transform: all 0.5s;
 }
 
 .button-form {
@@ -107,6 +118,7 @@ header {
   border: 10px solid bisque;
   background-color: cornsilk;
   border-radius: 5px;
+  transform: all 0.5s;
 }
 .button-form_display {
   grid-area: disp;
@@ -117,36 +129,44 @@ header {
   user-select: none;
   background-color: cornsilk;
   text-align: center;
+  transform: all 0.5s;
 }
 .button-form_btn {
   font-size: xx-large;
   padding: 10px;
   cursor: pointer;
   border-radius: 5px;
+  transform: all 0.5s;
 }
 .btnClear {
   grid-area: clr;
+  transform: all 0.5s;
 }
 
 .btnDel {
   grid-area: Del;
+  transform: all 0.5s;
 }
 
 .btnEnter {
   grid-area: ent;
+  transform: all 0.5s;
 }
 .btn0 {
   grid-area: nole;
+  transform: all 0.5s;
 }
 
 #land,
 #sky {
   position: absolute;
+  transform: all 0.5s;
 }
-
-/* \/\/\/ стиль для начального экрана \/\/\/ */
-header{
+.start-screen-button{
   display: none;
+}
+/* \/\/\/ стиль для начального экрана \/\/\/ */
+.header-new-game{
   background-color: #2fbcdb;
   width: 100%;
   height: 100%;
@@ -154,40 +174,43 @@ header{
   top: 0px;
   left: 0px;
   text-align: center;
-  transform: all 0.5s;
+  transform: all 1.5s;
   z-index: 1;
 }
-h1 {
-  display: none;
+.h1-new-game {
   position: absolute;
   top: 0%;
   left:10%;
-  font-size: 9em;
-  transform: all 0.5s;
+  transform: all 1.5s;
 }
-.start-screen{
-  display: none;
+@media (min-width: 200px) and (max-width: 1024px) {
+  .h1-new-game {
+    font-size: 18vw ;
+  }
+}
+.start-screen-new-game{
+  
   z-index: 1;
   width: 100vw;
   position: fixed;
   top: 50vh;
   left: 50%;
   transform: translateX(-20%);
-  transform: all 0.5s;
+  transform: all 1.5s;
 }
-.start-screen-button{
-  font-size: 6em;
+.start-screen-button-new-game{
+  display: inline-block;
+  font-size: 18vw ;
 }
-.option{
-  display: none;
+
+.option-new-game{
   z-index: 1;
   width: 100vw;
   position: fixed;
   bottom: 0;
   right: 0;
   transform: translateX(-20%);
-  transform: all 0.5s;
+  transform: all 1.5s;
 }
-
 
 /* /\/\/\ стиль для начального экрана /\/\/\ */

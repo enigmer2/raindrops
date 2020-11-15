@@ -7,8 +7,8 @@
     <title>Document</title>
   </head>
   <body>
-    <header>
-      <h1>Task Raindrop</h1>
+    <header id="header" class="header header-new-game">
+      <h1 id="h1" class="h1 h1-new-game">Task Raindrop</h1>
     </header>
     <main id="game" class="game">
       <section id="canvas" class="canvas-wrapper">
@@ -45,16 +45,19 @@
         </div>
       </section>
       <section id="info" class="info">&copy; 2020 Dzmitry Datskevich</section>
-      <section id="startScreen" class="start-screen">
+      <section id="startScreen" class="start-screen start-screen-new-game">
         <section class="fullscreen">
-          <button id="playButton" class="button-form_btn start-screen-button">
+          <button
+            id="playButton"
+            class="button-form_btn start-screen-button start-screen-button-new-game"
+          >
             play
           </button>
-          <button id="howButton" class="button-form_btn start-screen-button">
+          <button id="howButton" class="button-form_btn start-screen-button start-screen-button-new-game">
             how to play
           </button>
         </section>
-        <section id="options" class="option">
+        <section id="option" class="option option-new-game">
           <button
             class="button-form_btn fullscreen-on"
             onclick="openFullscreen();"
@@ -63,8 +66,14 @@
             class="button-form_btn fullscreen-off"
             onclick="closeFullscreen();"
           ></button>
-          <button class="button-form_btn sound-off" onclick="Audio('media/3.mp3').pause(); return false;"></button>
-          <button class="button-form_btn sound-on" onclick="Audio('media/3.mp3').play(); return false;"></button>
+          <button
+            class="button-form_btn sound-off"
+            onclick="Audio('media/3.mp3').pause(); return false;"
+          ></button>
+          <button
+            class="button-form_btn sound-on"
+            onclick="Audio('media/3.mp3').play(); return false;"
+          ></button>
         </section>
       </section>
 
