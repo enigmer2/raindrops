@@ -44,11 +44,10 @@ playButton.addEventListener("click", () => {
 });
 
 function newGame() {
-  
   //document.location.reload();
   waterLevelUp = 100;
   waterLevel = 9;
-    isPlayed = true;
+  isPlayed = true;
   console.log(isPlayed);
   score = 0; // сбрасываем очки
   speed = randomInt(5, 10); // сбрасываем  скорость капель
@@ -56,13 +55,13 @@ function newGame() {
   op1 = 0; // сбрасываем первый операнд
   op2 = 0; // сбрасываем второй операнд
   op = ""; // сбрасываем оператор
-    header.classList.remove("header-new-game");
-    h1.classList.remove("h1-new-game");
-    startScreen.classList.remove("start-screen-new-game");
-    playButton.classList.remove("start-screen-button-new-game");
-    howButton.classList.remove("start-screen-button-new-game");
-    option.classList.remove("option-new-game");
-    makeit();
+  header.classList.remove("header-new-game");
+  h1.classList.remove("h1-new-game");
+  startScreen.classList.remove("start-screen-new-game");
+  playButton.classList.remove("start-screen-button-new-game");
+  howButton.classList.remove("start-screen-button-new-game");
+  option.classList.remove("option-new-game");
+  makeit();
 }
 
 // обработчик нажатия клавиш
@@ -177,10 +176,23 @@ function pause(idAudio) {
   x.pause();
 }
 
-function randomInt(min, max) {
-  // случайное число от min до (max+1)
+function randomInt(min, max) {// случайное число от min до (max+1)
+  
   let rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
+}
+function randExpr(level) {// в зависимости от уровня level
+  
+  // и от уровня зависит на сколько сложыне символы будут
+  if (level === 0) {
+    return; //возвращаяет выражение
+  } else if (level === 1) {
+    return; //возвращаяет выражение
+  } else if (level === 2) {
+    return; //возвращаяет выражение
+  } else if (level === 3) {
+    return; //возвращаяет выражение
+  }
 }
 
 function openFullscreen() {
@@ -245,7 +257,7 @@ function makeit() {
       }
     }
     c.stroke();
-    c.strokeStyle = "rgba(0,0,155, 0.5)";
+    c.strokeStyle = "rgba(0,0,130, 0.5)";
     c.closePath();
 
     increment1 += 0.05;
@@ -267,15 +279,15 @@ function makeit() {
     drawBackground();
     // Draw drops
     var xpos = [
-      randomInt(100, 140),
-      randomInt(200, 250),
-      randomInt(300, 360),
+      randomInt(30, cw - 30),
+      randomInt(30, cw - 30),
+      randomInt(30, cw - 30),
       400,
     ];
     var ypos = [
-      randomInt(-60, -150),
-      randomInt(-170, -250),
-      randomInt(-270, -360),
+      randomInt(-60, -250),
+      randomInt(-270, -550),
+      randomInt(-470, -960),
       -120,
     ];
     var op1 = [1, 2, 3, 4];
@@ -287,7 +299,7 @@ function makeit() {
   }
 
   function drawBackground() {
-    c.fillStyle = "#2fbcdb";
+    c.fillStyle = "#22bcdb";
     c.fillRect(0, 0, canvas.width, canvas.height);
     c.fill();
 
@@ -313,7 +325,7 @@ function makeit() {
 
     c.beginPath();
     c.arc(x, y + 4, 50, 0, Math.PI * 2);
-    c.fillStyle = "rgba(0,0,200, 0.5)";
+    c.fillStyle = "rgba(0,0,100, 0.5)";
     c.fill();
     c.closePath();
     c.beginPath();
@@ -324,7 +336,7 @@ function makeit() {
     c.fillText(`${op}`, x - 35, y + 20);
     c.fillText(`${op2}`, x, y + 40);
     c.closePath();
-    c.clearRect(canvas.width / 2, canvas.height - 30, cw, ch);
+    c.clearRect(canvas.width / 2, canvas.height, cw, ch);
     return {
       x: x,
       y: y,
@@ -339,7 +351,7 @@ function makeit() {
     var op1 = op1;
     var op = op;
     var op2 = op2;
-    
+
     // Update position
     if (drops[dropNumber].y >= canvas.height - waterLevelUp) {
       waterLevelUp += 50;
@@ -362,7 +374,7 @@ function makeit() {
           howButton.classList.add("start-screen-button-new-game");
           option.classList.add("option-new-game");
           console.log(isPlayed);
-        }else{
+        } else {
           header.classList.toggle("header-new-game");
           h1.classList.toggle("h1-new-game");
           startScreen.classList.toggle("start-screen-new-game");
