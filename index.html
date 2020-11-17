@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="css/style.css" />
-    <title>Document</title>
+    <title>Task Raindrop</title>
   </head>
   <body>
     <header id="header" class="header header-new-game">
@@ -16,7 +16,6 @@
       </section>
 
       <section id="score" class="score-wrapper">
-        <div>HiScore:</div>
         <img src="media/star.svg" alt="" /> <span>Score:</span>
       </section>
 
@@ -62,22 +61,14 @@
           </button>
         </section>
         <section id="option" class="option option-new-game">
-          <button
-            class="button-form_btn fullscreen-on"
-            onclick="openFullscreen();"
-          ></button>
-          <button
-            class="button-form_btn fullscreen-off"
-            onclick="closeFullscreen();"
-          ></button>
-          <button
-            class="button-form_btn sound-off"
+         
+          <button class="button-form_btn sound-off"
             onclick="new Audio('media/3.mp3').pause(); return false;"
           ></button>
           <button
             class="button-form_btn sound-on"
             onclick="new Audio('media/3.mp3').play(); return false;"
-          ></button>
+          ></button> <button id="fullOnOff" class="button-form_btn fullscreen-on" ></button>
         </section>
       </section>
 
