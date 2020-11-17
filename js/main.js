@@ -17,10 +17,29 @@ let idAudio = document.getElementById("idAudio");
 let score = 0; // очки
 let HiScore = 0; // рекорд по очкам
 let speed = randomInt(50, 100); // скорость капель
-var op1 = [1, 2, 3, 4]; // первый операнд
-var op2 = [1, 2, 3, 4]; // второй операнд
-var op = ["+", "-", "*", "/"]; // оператор
-let drops = [];
+var op1 = [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+]; // первый операнд
+var op = ["+", "-", "*"]; // оператор
 let answer = 0; // ответ
 let waterLevel = 9; // уровень воды для волн
 let waterLevelUp = 100; // уровень поднятия воды для капель
@@ -33,7 +52,7 @@ let c = canvas.getContext("2d");
 let x = 100;
 let y = 260;
 
-canvas.height = innerHeight; // на всю высоту экрана
+canvas.height = canvasWraper.offsetHeight; // на всю высоту экрана
 canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
 let ch = canvas.height;
 let cw = canvas.width;
@@ -61,10 +80,6 @@ addEventListener("resize", () => {
   ch = canvas.height;
   cw = canvas.width;
 });
-
-var bg = setInterval(function () {
-  drawLand();
-}, 50);
 
 function addScore() {
   score += 100;
@@ -108,7 +123,7 @@ function newGame() {
   op1 = [1, 2, 3, 4]; // первый операнд
   op2 = [1, 2, 3, 4]; // второй операнд
   op = ["+", "-", "*", "/"]; // оператор
-  drops = [];
+
   answer = 0; // ответ
   waterLevel = 9; // уровень воды для волн
   waterLevelUp = 100; // уровень поднятия воды для капель
@@ -127,9 +142,12 @@ function newGame() {
   howButton.classList.remove("start-screen-button-new-game");
   option.classList.remove("option-new-game");
 
-  setInterval(function () {
+  let fall1 = setInterval(function () {
     drawLand();
-  }, 20);
+  }, 50);
+
+  // Stop the drop at anytime with this code :
+  //clearInterval(fall1);
 }
 
 function setStorage(nameKey, valueKey) {
@@ -194,7 +212,7 @@ function drawBackground() {
 
   var img = new Image(); // Создаём новый объект Image
   img.src = "media/stone.svg"; // Устанавливаем путь к источнику
-  c.drawImage(img, innerWidth / 10, canvas.height / 2, 600, 606); //рисуем картинку в канвас
+  c.drawImage(img, innerWidth / 38, canvas.height / 1.5, 600, 500); //рисуем картинку в канвас
   //c.drawImage(img, -(innerWidth / 2), innerWidth / 0.85, 2000, 1006); рисуем картинку2 в канвас
 }
 
@@ -214,14 +232,14 @@ function animateWave() {
 
   c.beginPath();
   c.moveTo(0, ch / 2);
-  wave(waterLevel, increment2 -= 0.03);
+  wave(waterLevel, (increment2 -= 0.03));
   c.stroke();
   c.strokeStyle = FILL_BLUE;
   c.closePath();
 
   c.beginPath();
   c.moveTo(0, ch / 2);
-  wave(waterLevel - 1, increment1 += 0.05);
+  wave(waterLevel - 1, (increment1 += 0.05));
   c.stroke();
   c.strokeStyle = FILL_BLUE;
   c.closePath();
@@ -232,104 +250,125 @@ function animateWave() {
 function drawLand() {
   drawBackground();
   animateWave();
-  init();
+  drop1.drawDrop;
+  drop2.drawDrop;
+  drop3.drawDrop;
+  drop1.waterLevel;
+  drop2.waterLevel;
+  drop3.waterLevel;
+  drop1.ypos = 0;
+  drop2.ypos = 0;
+  drop3.ypos = 0;
   // Make the 3rd drop falls
-  updateDrop(1);
-  updateDrop(2);
-  updateDrop(3);
-  // Stop the drop at anytime with this code :
-  //clearInterval(fall);
 }
 
-function init() {
-  canvas.style.border = "1px solid black";
-  // Draw drops
-  var xpos = [
-    randomInt(30, cw - 200),
-    randomInt(30, cw - 100),
-    randomInt(30, cw - 30),
-    400,
-  ];
-  var ypos = [
-    randomInt(-60, -550),
-    randomInt(-470, -650),
-    randomInt(-670, -960),
-    -120,
-  ];
-
-  for (i = 0; i < xpos.length; i++) {
-    drops.push(drawDrop(xpos[i], ypos[i], op1[i], op[i], op2[i]));
+// класс капли
+class Drop {
+  constructor(options) {
+    this.x = options.x;
+    this.y = options.y;
+    this.op1 = options.op1;
+    this.op2 = options.op2;
+    this.op = options.op;
+    this.speed = options.speed;
+    this.blowup = options.blowup;
+    this.c = options.c;
   }
-}
 
-function drawDrop(x = 1, y = 1, op1 = 1, op = "+", op2 = 2) {
-  c.beginPath();
-  c.fillStyle = "blue";
-  c.moveTo(x - 60, y);
-  c.lineTo(x, y - 150);
-  c.lineTo(x + 60, y);
-  c.arc(x, y, 60, 0, Math.PI);
-  c.closePath();
-  c.fill();
-
-  c.beginPath();
-  c.arc(x, y + 4, 50, 0, Math.PI * 2);
-  c.fillStyle = FILL_DARK_BLUE;
-  c.fill();
-  c.closePath();
-
-  c.beginPath();
-  c.textAlign = "center";
-  c.fillStyle = "white";
-  c.font = "bold 40px serif";
-  c.fillText(`${op1}`, x, y);
-  c.fillText(`${op}`, x - 35, y + 20);
-  c.fillText(`${op2}`, x, y + 40);
-  c.closePath();
-
-  return {
-    x: x,
-    y: y,
-    op1: op1,
-    op: op,
-    op2: op2,
-  };
-}
-
-function updateDrop(dropNumber) {
-  // Update position
-  if (drops[dropNumber].y >= canvas.height - waterLevelUp) {
-    waterLevelUp += 50;
-    waterLevel -= 1;
-    console.log("уровень воды " + waterLevelUp);
-    if (waterLevelUp >= 360) {
-      console.log("Game over");
-      clearInterval();
-      bg = 0;
-      drops[dropNumber].y = -randomInt(60, 100);
-      isPlayed = false;
-      if (!isPlayed) {
-        header.classList.add("header-new-game");
-        h1.classList.add("h1-new-game");
-        startScreen.classList.add("start-screen-new-game");
-        playButton.classList.add("start-screen-button-new-game");
-        howButton.classList.add("start-screen-button-new-game");
-        option.classList.add("option-new-game");
-      } else {
-        header.classList.toggle("header-new-game");
-        h1.classList.toggle("h1-new-game");
-        startScreen.classList.toggle("start-screen-new-game");
-        playButton.classList.toggle("start-screen-button-new-game");
-        howButton.classList.toggle("start-screen-button-new-game");
-        option.classList.toggle("option-new-game");
-      }
+  get answer() {
+    if (this.op1 > this.op2) {
+      var operand1 = this.op2;
+      var operand2 = this.op1;
+    } else {
+      var operand2 = this.op2;
+      var operand1 = this.op1;
     }
-    drops[dropNumber].y = -randomInt(60, 100);
-  } else {
-    drops[dropNumber].y += 5;
+    if (this.op == "+") {
+      return operand2 + operand1;
+    }
+    if (this.op == "-") {
+      return operand2 - operand1;
+    }
+    if (this.op == "*") {
+      return operand2 * operand1;
+    }
   }
-  //Draw drops
-  for (i = 0; i < drops.length; i++) {
-    drawDrop(drops[i].x, drops[i].y, drops[i].op1, drops[i].op, drops[i].op2);
+
+  get waterLevel() {
+    if (this.y >= ch - waterLevelUp) {
+      this.speed = -ch;
+      console.log(waterLevel);
+      return  waterLevel -= 1;
+    }
+  }
+  get drawDrop() {
+    if (this.op1 > this.op2) {
+      var operand1 = this.op2;
+      var operand2 = this.op1;
+    } else {
+      var operand2 = this.op2;
+      var operand1 = this.op1;
+    }
+    this.c.beginPath();
+    this.c.fillStyle = "blue";
+    this.c.moveTo(this.x - 60, this.y);
+    this.c.lineTo(this.x, this.y - 150);
+    this.c.lineTo(this.x + 60, this.y);
+    this.c.arc(this.x, this.y, 60, 0, Math.PI);
+    this.c.closePath();
+    this.c.fill();
+
+    this.c.beginPath();
+    this.c.arc(this.x, this.y + 4, 50, 0, Math.PI * 2);
+    this.c.fillStyle = FILL_DARK_BLUE;
+    this.c.fill();
+    this.c.closePath();
+
+    this.c.beginPath();
+    this.c.textAlign = "center";
+    this.c.fillStyle = "white";
+    this.c.font = "bold 40px serif";
+    this.c.fillText(`${operand2}`, this.x, this.y);
+    this.c.fillText(`${this.op}`, this.x - 35, this.y + 20);
+    this.c.fillText(`${operand1}`, this.x, this.y + 40);
+    this.c.closePath();
+  }
+
+  set xpos(xpos) {
+    this.x = xpos;
+  }
+  set ypos(ypos) {
+    this.y += ypos + this.speed;
   }
 }
+// сoздание новой капли из класса Drop
+let drop1 = new Drop({
+  x: randomInt(250, cw - 30),
+  y: randomInt(-140, -250),
+  op1: op1[randomInt(0, 19)],
+  op2: op1[randomInt(0, 19)],
+  op: op[randomInt(0, 1)],
+  speed: 1,
+  blowup: false,
+  c: c,
+});
+let drop2 = new Drop({
+  x: randomInt(150, cw - 150),
+  y: randomInt(-70, -140),
+  op1: op1[randomInt(0, 19)],
+  op2: op1[randomInt(0, 19)],
+  op: op[randomInt(0, 1)],
+  speed: 1,
+  blowup: false,
+  c: c,
+});
+let drop3 = new Drop({
+  x: randomInt(40, cw - 250),
+  y: randomInt(-30, -70),
+  op1: op1[randomInt(0, 19)],
+  op2: op1[randomInt(0, 19)],
+  op: op[randomInt(0, 1)],
+  speed: 1,
+  blowup: false,
+  c: c,
+});
