@@ -43,6 +43,7 @@
           <button id="btn0" class="button-form_btn btn0">0</button>
           <button id="btnEnter" class="button-form_btn btnEnter">Enter</button>
         </div>
+        <button id="sc">add score</button>
       </section>
       <section id="info" class="info">&copy; 2020 Dzmitry Datskevich</section>
       <section id="startScreen" class="start-screen start-screen-new-game">
@@ -53,7 +54,10 @@
           >
             play
           </button>
-          <button id="howButton" class="button-form_btn start-screen-button start-screen-button-new-game">
+          <button
+            id="howButton"
+            class="button-form_btn start-screen-button start-screen-button-new-game"
+          >
             how to play
           </button>
         </section>
@@ -68,11 +72,11 @@
           ></button>
           <button
             class="button-form_btn sound-off"
-            onclick="Audio('media/3.mp3').pause(); return false;"
+            onclick="new Audio('media/3.mp3').pause(); return false;"
           ></button>
           <button
             class="button-form_btn sound-on"
-            onclick="Audio('media/3.mp3').play(); return false;"
+            onclick="new Audio('media/3.mp3').play(); return false;"
           ></button>
         </section>
       </section>
