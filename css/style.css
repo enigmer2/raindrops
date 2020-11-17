@@ -37,6 +37,20 @@ span {
     " canvas canvas button "
     " canvas canvas info";
 }
+@media (min-width: 0px) and (max-width: 900px) {
+  .game {
+    display: grid;
+  
+    grid-template-columns: 1fr ;
+    grid-template-rows: 50px 1fr auto auto auto;
+    grid-template-areas:
+    " score "
+    " canvas "
+    " howTo "
+    " button "
+    " info";
+  }
+}
 header {
   z-index: 2;
   top: 0;
@@ -92,11 +106,13 @@ header {
   grid-area: canvas;
   transform: all 0.5s;
 }
+
 .button-wrapper {
   grid-area: button;
   margin: 0 20px;
   transform: all 0.5s;
 }
+
 .score-wrapper {
   grid-area: score;
   display: flex;
@@ -115,6 +131,7 @@ header {
   transform: all 0.5s;
 }
 
+
 .button-form {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -130,6 +147,23 @@ header {
   border-radius: 5px;
   transform: all 0.5s;
 }
+@media (min-width: 0px) and (max-width: 900px) {
+  .button-form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: auto auto auto auto auto;
+    grid-template-areas:
+      "disp disp disp disp"
+      " . . . clr"
+      " . . . ent"
+      " . . . ent"
+      "nole nole nole Del";
+    border: 5px solid bisque;
+    background-color: cornsilk;
+    border-radius: 5px;
+    transform: all 0.5s;
+  }
+}
 .button-form_display {
   grid-area: disp;
   margin: 40px 30px;
@@ -141,12 +175,34 @@ header {
   text-align: center;
   transform: all 0.5s;
 }
+@media (min-width: 0px) and (max-width: 900px) {
+  .button-form_display {
+    grid-area: disp;
+    margin: 1px 1px;
+    font-size: medium;
+    border: none;
+    outline: none;
+    user-select: none;
+    background-color: cornsilk;
+    text-align: center;
+    transform: all 0.5s;
+  }
+}
 .button-form_btn {
   font-size: xx-large;
   padding: 10px;
   cursor: pointer;
   border-radius: 5px;
   transform: all 0.5s;
+}
+@media (min-width: 0px) and (max-width: 900px) {
+  .button-form_btn {
+    font-size: large;
+    padding: 1px;
+    cursor: pointer;
+    border-radius: 5px;
+    transform: all 0.5s;
+  }
 }
 .btnClear {
   grid-area: clr;
@@ -167,8 +223,7 @@ header {
   transform: all 0.5s;
 }
 
-#land,
-#sky {
+#land{
   position: absolute;
   transform: all 0.5s;
 }
