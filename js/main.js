@@ -139,6 +139,22 @@ function addScore() {
 function newGame() {
   operandFirst = "";
   display.value = "";
+  while (dropAnswer.length > 0) {
+    dropAnswer.pop();
+  }
+
+  drop1 = new Drop({});
+  drop2 = new Drop({});
+  drop3 = new Drop({});
+  drop4 = new DropExp({});
+  dropAnswer = [drop1.answer, drop2.answer, drop3.answer, drop4.answer];
+  console.log(dropAnswer);
+
+  drop1.answer;
+  drop2.answer;
+  drop3.answer;
+  drop4.answer;
+
   drop1.y = randomInt(-30, -250);
   drop2.y = randomInt(-30, -250);
   drop3.y = randomInt(-30, -250);
@@ -172,6 +188,10 @@ function newGame() {
 }
 
 function gameOver() {
+  gamePause();
+  while (dropAnswer.length > 0) {
+    dropAnswer.pop();
+  }
   drop1.ypos = randomInt(-30, -250);
   drop2.ypos = randomInt(-30, -250);
   drop3.ypos = randomInt(-30, -250);
@@ -186,8 +206,6 @@ function gameOver() {
   playButton.classList.add("start-screen-button-new-game");
   howButton.classList.add("start-screen-button-new-game");
   option.classList.add("option-new-game");
-
-  HiScore = localStorage.getItem("HiScore");
   if (localStorage.getItem("HiScore") > localStorage.getItem("Score")) {
     setStorage("Score", score);
   } else {
@@ -324,6 +342,7 @@ class Drop {
     this.op = options.op = op[randomInt(0, 1)];
     this.speed = options.speed = 1;
     this.c = options.c = c;
+    this.answer;
   }
 
   get answer() {
@@ -401,12 +420,6 @@ class Drop {
     this.y += ypos + this.speed;
   }
 }
-// сoздание новой капли из класса Drop
-let drop1 = new Drop({});
-
-let drop2 = new Drop({});
-
-let drop3 = new Drop({});
 
 //особенная капля
 class DropExp extends Drop {
@@ -446,11 +459,19 @@ class DropExp extends Drop {
     this.c.closePath();
   }
 }
+
+// сoздание новой капли из класса Drop
+let drop1 = new Drop({});
+
+let drop2 = new Drop({});
+
+let drop3 = new Drop({});
+
 let drop4 = new DropExp({});
 let dropAnswer = [drop1.answer, drop2.answer, drop3.answer, drop4.answer];
 
-//обработчик нажатия клавиш
 function buttonPress(e) {
+  //обработчик нажатия клавиш
   if (e.keyCode === undefined) {
     presedButton = e.target.textContent;
   } else {
@@ -521,6 +542,7 @@ function buttonPress(e) {
       chackAnswer(dropAnswer, +userAnswer);
       userAnswer = "";
       operandFirst = "";
+      display.value = "";
       break;
     case "Clear":
     case 8:
@@ -532,55 +554,72 @@ function buttonPress(e) {
   // вычисления после нажатия кнопки
 }
 
-// листнер - нажатия клавишь на Num-клавитуре
-addEventListener("keydown", buttonPress);
+addEventListener("keydown", buttonPress); // листнер - нажатия клавишь на Num-клавитуре
 
-// листнер  - нажатия клавишь на  виртуальной клавитуре
 for (let i = 0; i < buttons.length; i++) {
+  // листнер  - нажатия клавишь на  виртуальной клавитуре
   let number = buttons[i];
   number.addEventListener("click", buttonPress);
 }
 
-var indices = [];
+let indices = [];
+
 var idx = dropAnswer.indexOf(+userAnswer);
 while (idx != -1) {
   indices.push(idx);
   idx = dropAnswer.indexOf(+userAnswer, idx + 1);
 }
 
-console.log(indices);
-// [0, 2, 4]
-
 function chackAnswer(dropAnswer, userAnswer) {
-  console.log(+userAnswer);
-  console.log(dropAnswer);
+  function logArrayElements(element, index) {
+    if (userAnswer === element) {
+      console.log(index);
+      switch (index) {
+        case 0:
+          drop1 = new Drop({
+            y: randomInt(-30, -550),
+          });
+          dropAnswer.splice(index, 1, drop1.answer);
+          console.log(dropAnswer);
+          addScore();
+          break;
+        case 1:
+          drop2 = new Drop({});
+          dropAnswer.splice(index, 1, drop2.answer);
+          console.log(dropAnswer);
+          addScore();
+          break;
+        case 2:
+          drop3 = new Drop({});
+          dropAnswer.splice(index, 1, drop3.answer);
+          console.log(dropAnswer);
+          addScore();
+          break;
+        case 3:
+          drop1 = new Drop({});
+          dropAnswer.splice(0, 1, drop1.answer);
+          drop2 = new Drop({});
+          dropAnswer.splice(1, 1, drop2.answer);
+          drop3 = new Drop({});
+          dropAnswer.splice(2, 1, drop3.answer);
+          drop4 = new DropExp({});
+          dropAnswer.splice(3, 1, drop4.answer);
+          console.log(dropAnswer);
+          addScore();
+          break;
+      }
+    }
+  }
+
   if (dropAnswer.includes(+userAnswer)) {
-    addScore();
-    console.log("Element Found");
+    // addScore();
+    dropAnswer.forEach(logArrayElements);
   } else {
     if (score > 0) {
       score -= 20;
     }
     play(audioFalse);
-    console.log("Element not Found");
+    audioFalse.currentTime = 0;
   }
 }
 
-
-/*function chackAnswer (dropAnswer, userAnswer ) {
-  for(var i=0; i < dropAnswer.length; i++) {
-    console.log(dropAnswer[i]);
-   if(userAnswer === dropAnswer[i]) {
-    addScore()
-    console.log( dropAnswer[i])
-   }
-   else {
-     if(score > 0) { score -= 20;}
-      play(audioFalse);
-      console.log('Element not Found');
-   }
- }
-}
-*/
-
-// чтобы при правильном ответе исчезали добавить и автоплэй добавить осталось
