@@ -81,7 +81,7 @@ header {
 .fullscreen-on {
   width: 50px;
   height: 50px;
-  background: url(media/fullscreen.svg);
+  background: url(https://raw.githubusercontent.com/enigmer2/raindrops/66e885dfc885275531e1a3a51e164ed5505baa75/media/fullscreen.svg);
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
@@ -89,7 +89,7 @@ header {
 .fullscreen-off {
   width: 50px;
   height: 50px;
-  background: url(media/fullscreen-exit.svg);
+  background: url(https://raw.githubusercontent.com/enigmer2/raindrops/66e885dfc885275531e1a3a51e164ed5505baa75/media/fullscreen-exit.svg);
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
@@ -97,7 +97,7 @@ header {
 .sound-off {
   width: 50px;
   height: 50px;
-  background: url(media/SoundOff.svg);
+  background: url(/media/SoundOff.svg);
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
@@ -105,7 +105,7 @@ header {
 .sound-on {
   width: 50px;
   height: 50px;
-  background: url(media/SoundOn.svg);
+  background: url(/media/SoundOn.svg);
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
