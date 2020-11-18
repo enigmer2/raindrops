@@ -3,6 +3,14 @@ const FILL_BLUE = "rgba(0,0,155, 0.5)";
 const FILL_TURQUISE = "#22abcd";
 const FILL_ORANGE = "#f3d44a";
 
+const audioFone = document.getElementById("fone");
+const audioFalse = document.getElementById("false");
+const audioTrue = document.getElementById("true");
+const audioDrop1 = document.getElementById("drop1");
+const audioDrop2 = document.getElementById("drop2");
+const audioDrop3 = document.getElementById("drop3");
+const audioDrop = [audioDrop1, audioDrop2, audioDrop3];
+
 let startScreen = document.getElementById("startScreen");
 let playButton = document.getElementById("playButton");
 let howButton = document.getElementById("howButton");
@@ -15,12 +23,14 @@ let canvasWraper = document.getElementById("canvas");
 let sc = document.getElementById("sc");
 let idAudio = document.getElementById("idAudio");
 let fullscreen = document.getElementById("fullOnOff");
-let display = document.getElementById("display");       // Выбор дисплэя
-let buttons = document.querySelectorAll(".button-form_btn"); 
+let soundOnOff = document.getElementById("soundOnOff");
+let display = document.getElementById("display"); // Выбор дисплэя
+let buttons = document.querySelectorAll(".button-form_btn");
 
+let userAnswer = 0; //по нажатию клавиши прибавляет к предыдущему вводу следуюю нажатую и по интеру проверяет ;
 let score = 0; // очки
 let HiScore = 0; // рекорд по очкам
-
+let operandFirst = "";
 let speed = 0; // скорость капель
 var op1 = [
   1,
@@ -49,8 +59,7 @@ let answer = 0; // ответ
 let waterLevel = 9; // уровень воды для волн
 let waterLevelUp = 60; // уровень поднятия воды для капель
 let isPlayed = false; // игра запущена или нет
-let isPaused = false; //поставлена пауза
-let isMuted = false; // звук выключен или нет
+let isMuted = true; // звук выключен или нет
 let elem = document.documentElement;
 let isFullScreen = false;
 let c = canvas.getContext("2d");
@@ -74,7 +83,7 @@ playButton.addEventListener("click", () => {
   newGame();
 });
 
-sc.addEventListener("click", addScore);
+// sc.addEventListener("click", addScore); // была кнопка добавить очков
 
 addEventListener("resize", () => {
   canvas.height = canvasWraper.offsetHeight;
@@ -84,8 +93,10 @@ addEventListener("resize", () => {
 });
 
 function addScore() {
-   score += 20;
-
+  score += 100;
+  audioTrue.playbackRate = 2.0; // ускоряет музыку
+  play(audioTrue);
+  audioTrue.currentTime = 0;
   scoreDisplay.innerHTML = `<img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
   if (score > 100) {
     drop1.speed = 2;
@@ -126,6 +137,8 @@ function addScore() {
 }
 
 function newGame() {
+  operandFirst = "";
+  display.value = "";
   drop1.y = randomInt(-30, -250);
   drop2.y = randomInt(-30, -250);
   drop3.y = randomInt(-30, -250);
@@ -139,7 +152,7 @@ function newGame() {
   waterLevelUp = 60; // уровень поднятия воды для капель
   isPlayed = false; // игра запущена или нет
   isPaused = false; //поставлена пауза
-  isMuted = false; // звук выключен или нет
+  isMuted = true; // звук выключен или нет
   elem = document.documentElement;
   c = canvas.getContext("2d");
   header.classList.remove("header-new-game");
@@ -154,11 +167,9 @@ function newGame() {
   drop3.speed = 1;
   drop4.speed = 1;
 
-  display.value = `HiScore: ${localStorage.getItem("HiScore")}`;
   // Stop the drop at anytime with this code :
   //clearInterval(fall1);
 }
-
 
 function gameOver() {
   drop1.ypos = randomInt(-30, -250);
@@ -203,28 +214,40 @@ function pause(idAudio) {
   idAudio.pause();
 }
 
+soundOnOff.addEventListener("click", () => {
+  if (isMuted) {
+    play(audioFone);
+    isMuted = false;
+    soundOnOff.classList.toggle("sound-off");
+    soundOnOff.classList.toggle("sound-on");
+  } else {
+    pause(audioFone);
+    isMuted = true;
+    soundOnOff.classList.toggle("sound-off");
+    soundOnOff.classList.toggle("sound-on");
+  }
+});
+
 function randomInt(min, max) {
   // случайное число от min до (max+1)
-
   let rand = min + Math.random() * (max + 1 - min);
   return Math.floor(rand);
 }
 
 //листнер клика на fullscreen
-fullscreen.addEventListener('click',() => {
-  if(!isFullScreen){
+fullscreen.addEventListener("click", () => {
+  if (!isFullScreen) {
     elem.requestFullscreen();
-  isFullScreen = true;
-  fullscreen.classList.toggle("fullscreen-off");
-  fullscreen.classList.toggle("fullscreen-on");
-
-  } else {  document.exitFullscreen();
+    isFullScreen = true;
+    fullscreen.classList.toggle("fullscreen-off");
+    fullscreen.classList.toggle("fullscreen-on");
+  } else {
+    document.exitFullscreen();
     isFullScreen = false;
-  fullscreen.classList.toggle("fullscreen-off");
-  fullscreen.classList.toggle("fullscreen-on");
+    fullscreen.classList.toggle("fullscreen-off");
+    fullscreen.classList.toggle("fullscreen-on");
   }
 });
-
 
 function drawBackground() {
   c.fillStyle = FILL_TURQUISE;
@@ -282,11 +305,11 @@ function drawLand() {
   drop2.ypos = 0;
   drop3.ypos = 0;
   drop4.ypos = 0;
-setStorage("Score", score);
-      scoreDisplay.innerHTML = ` <img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
+  setStorage("Score", score);
+  scoreDisplay.innerHTML = ` <img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
 
-  if (waterLevel <=7) {
-  gameOver();   
+  if (waterLevel <= 7) {
+    gameOver();
   }
   // Make the 3rd drop falls
 }
@@ -301,7 +324,6 @@ class Drop {
     this.op = options.op = op[randomInt(0, 1)];
     this.speed = options.speed = 1;
     this.c = options.c = c;
-
   }
 
   get answer() {
@@ -329,14 +351,14 @@ class Drop {
       this.y = -ch;
       waterLevelUp += 60;
       waterLevel -= 1;
+      play(audioDrop[randomInt(0, 2)]);
       this.xpos = randomInt(30, cw - 30);
       this.ypos = randomInt(-30, -600);
       if (score <= 0) {
         score = 0;
-      }else{
+      } else {
         score -= 20;
       }
-      
     }
   }
   get drawDrop() {
@@ -376,8 +398,7 @@ class Drop {
     this.x = xpos;
   }
   set ypos(ypos) {
-    this.y += (ypos + this.speed);
-    
+    this.y += ypos + this.speed;
   }
 }
 // сoздание новой капли из класса Drop
@@ -426,73 +447,89 @@ class DropExp extends Drop {
   }
 }
 let drop4 = new DropExp({});
+let dropAnswer = [drop1.answer, drop2.answer, drop3.answer, drop4.answer];
 
 //обработчик нажатия клавиш
 function buttonPress(e) {
   if (e.keyCode === undefined) {
-    presedButton = e.target.textContent; 
+    presedButton = e.target.textContent;
   } else {
     presedButton = e.keyCode;
   }
   // обработчик листнера нажатия клавиш
   switch (presedButton) {
     case "0":
-    case 96:                                  // если нажата клавиша 0
-      operandFirst = 0;
-    break;
+    case 96: // если нажата клавиша 0
+      operandFirst += 0;
+      display.value = +operandFirst;
+      break;
     case "1":
-    case 97:                                  // если нажата клавиша 1
-      operandFirst = 1;
-    break;
-    case "2":  
-    case 98:                                  // если нажата клавиша 2
-      operandFirst = 2;
-    break;
+    case 97: // если нажата клавиша 1
+      operandFirst += 1;
+      display.value = +operandFirst;
+      break;
+    case "2":
+    case 98: // если нажата клавиша 2
+      operandFirst += 2;
+      display.value = +operandFirst;
+      break;
     case "3":
-    case 99:                                  // если нажата клавиша 3
-      operandFirst = 3;
-    break;
+    case 99: // если нажата клавиша 3
+      operandFirst += 3;
+      display.value = +operandFirst;
+      break;
     case "4":
-    case 100:                                 // если нажата клавиша 4
-      operandFirst = 4;
-    break;
+    case 100: // если нажата клавиша 4
+      operandFirst += 4;
+      display.value = +operandFirst;
+      break;
     case "5":
-    case 101:                                 // если нажата клавиша 5
-      operandFirst = 5;
-    break;
+    case 101: // если нажата клавиша 5
+      operandFirst += 5;
+      display.value = +operandFirst;
+      break;
     case "6":
-    case 102:                                 // если нажата клавиша 6
-      operandFirst = 6;
-    break;
+    case 102: // если нажата клавиша 6
+      operandFirst += 6;
+      display.value = +operandFirst;
+      break;
     case "7":
-    case 103:                                 // если нажата клавиша 7
-      operandFirst = 7;
-    break;
+    case 103: // если нажата клавиша 7
+      operandFirst += 7;
+      display.value = +operandFirst;
+      break;
     case "8":
-    case 104:                                 // если нажата клавиша 8
-      operandFirst = 8;
-    break;
+    case 104: // если нажата клавиша 8
+      operandFirst += 8;
+      display.value = +operandFirst;
+      break;
     case "9":
-    case 105:                                 // если нажата клавиша 9
-      operandFirst = 9;
-    break;
-    case "Delete":  
-    case 46:     
-      operandFirst = "" ;   // удаляет всё                               
-        // если нажата клавиша delete
-    break;
+    case 105: // если нажата клавиша 9
+      operandFirst += 9;
+      display.value = +operandFirst;
+      break;
+    case "Delete":
+    case 46:
+      operandFirst = ""; // удаляет всё
+      display.value = +operandFirst;
+      // если нажата клавиша delete
+      break;
     case "Enter":
-    case 13: 
-        // Enter
-    break;
+    case 13:
+      userAnswer += operandFirst; // Enter
+      console.log(`Вывожу userAnswer: ${+userAnswer}`);
+      chackAnswer(dropAnswer, +userAnswer);
+      userAnswer = "";
+      operandFirst = "";
+      break;
     case "Clear":
-    case 8:               
-      operandFirst = "" ; // если нажата клавиша backspace удаляет текущий операнд
-    break;
+    case 8:
+      operandFirst = ""; // если нажата клавиша backspace удаляет текущий операнд
+      display.value = +operandFirst;
+      break;
   }
-  
-   // вычисления после нажатия кнопки
-  display.value = operandFirst;
+
+  // вычисления после нажатия кнопки
 }
 
 // листнер - нажатия клавишь на Num-клавитуре
@@ -504,5 +541,46 @@ for (let i = 0; i < buttons.length; i++) {
   number.addEventListener("click", buttonPress);
 }
 
+var indices = [];
+var idx = dropAnswer.indexOf(+userAnswer);
+while (idx != -1) {
+  indices.push(idx);
+  idx = dropAnswer.indexOf(+userAnswer, idx + 1);
+}
 
-// и добавить в массив и проходясь по массиву проверять есть ли похожий ответ равный введёному с клавиатуры
+console.log(indices);
+// [0, 2, 4]
+
+function chackAnswer(dropAnswer, userAnswer) {
+  console.log(+userAnswer);
+  console.log(dropAnswer);
+  if (dropAnswer.includes(+userAnswer)) {
+    addScore();
+    console.log("Element Found");
+  } else {
+    if (score > 0) {
+      score -= 20;
+    }
+    play(audioFalse);
+    console.log("Element not Found");
+  }
+}
+
+
+/*function chackAnswer (dropAnswer, userAnswer ) {
+  for(var i=0; i < dropAnswer.length; i++) {
+    console.log(dropAnswer[i]);
+   if(userAnswer === dropAnswer[i]) {
+    addScore()
+    console.log( dropAnswer[i])
+   }
+   else {
+     if(score > 0) { score -= 20;}
+      play(audioFalse);
+      console.log('Element not Found');
+   }
+ }
+}
+*/
+
+// чтобы при правильном ответе исчезали добавить и автоплэй добавить осталось
