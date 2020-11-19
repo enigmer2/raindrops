@@ -20,7 +20,6 @@ let header = document.getElementById("header");
 let h1 = document.getElementById("h1");
 let canvas = document.getElementById("land");
 let canvasWraper = document.getElementById("canvas");
-let sc = document.getElementById("sc");
 let idAudio = document.getElementById("idAudio");
 let fullscreen = document.getElementById("fullOnOff");
 let soundOnOff = document.getElementById("soundOnOff");
@@ -65,6 +64,7 @@ let isFullScreen = false;
 let c = canvas.getContext("2d");
 let x = 100;
 let y = 260;
+let indices = [];
 
 canvas.height = canvasWraper.offsetHeight; // на всю высоту экрана
 canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
@@ -83,14 +83,20 @@ playButton.addEventListener("click", () => {
   newGame();
 });
 
-// sc.addEventListener("click", addScore); // была кнопка добавить очков
-
 addEventListener("resize", () => {
   canvas.height = canvasWraper.offsetHeight;
   canvas.width = canvasWraper.offsetWidth;
   ch = canvas.height;
   cw = canvas.width;
 });
+
+addEventListener("keydown", buttonPress); // листнер - нажатия клавишь на Num-клавитуре
+
+for (let i = 0; i < buttons.length; i++) {
+  // листнер  - нажатия клавишь на  виртуальной клавитуре
+  let number = buttons[i];
+  number.addEventListener("click", buttonPress);
+}
 
 function addScore() {
   score += 100;
@@ -166,7 +172,7 @@ function newGame() {
   answer = 0; // ответ
   waterLevel = 10; // уровень воды для волн
   waterLevelUp = 60; // уровень поднятия воды для капель
-  isPlayed = false; // игра запущена или нет
+  isPlayed = true; // игра запущена или нет
   isPaused = false; //поставлена пауза
   isMuted = true; // звук выключен или нет
   elem = document.documentElement;
@@ -188,6 +194,8 @@ function newGame() {
 }
 
 function gameOver() {
+  isPlayed = false; 
+  
   gamePause();
   while (dropAnswer.length > 0) {
     dropAnswer.pop();
@@ -537,6 +545,9 @@ function buttonPress(e) {
       break;
     case "Enter":
     case 13:
+      if (!isPlayed) {
+        number.removeEventListener("click", buttonPress);
+      }
       userAnswer += operandFirst; // Enter
       console.log(`Вывожу userAnswer: ${+userAnswer}`);
       chackAnswer(dropAnswer, +userAnswer);
@@ -554,15 +565,7 @@ function buttonPress(e) {
   // вычисления после нажатия кнопки
 }
 
-addEventListener("keydown", buttonPress); // листнер - нажатия клавишь на Num-клавитуре
 
-for (let i = 0; i < buttons.length; i++) {
-  // листнер  - нажатия клавишь на  виртуальной клавитуре
-  let number = buttons[i];
-  number.addEventListener("click", buttonPress);
-}
-
-let indices = [];
 
 var idx = dropAnswer.indexOf(+userAnswer);
 while (idx != -1) {
@@ -620,6 +623,14 @@ function chackAnswer(dropAnswer, userAnswer) {
     }
     play(audioFalse);
     audioFalse.currentTime = 0;
+    
   }
 }
+// Hiscore не рапботает корректно 
+// функция показа очки и Hiscore в конце игры 
 
+// отключить листнер нажатия клавиш на клавиатуре
+
+// функция показать как надо играть 
+//// проверить if( drop.xpos === 0) { gamePause(); и вывести сообщение о том что надо делать }
+////  
