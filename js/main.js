@@ -1,36 +1,3 @@
-const FILL_DARK_BLUE = "rgba(0,0,60, 0.5)";
-const FILL_BLUE = "rgba(0,0,155, 0.5)";
-const FILL_TURQUISE = "#22abcd";
-const FILL_ORANGE = "#f3d44a";
-
-const audioFone = document.getElementById("fone");
-const audioFalse = document.getElementById("false");
-const audioTrue = document.getElementById("true");
-const audioDrop1 = document.getElementById("drop1");
-const audioDrop2 = document.getElementById("drop2");
-const audioDrop3 = document.getElementById("drop3");
-const audioDrop = [audioDrop1, audioDrop2, audioDrop3];
-
-let startScreen = document.getElementById("startScreen");
-let playButton = document.getElementById("playButton");
-let howButton = document.getElementById("howButton");
-let option = document.getElementById("option");
-let scoreDisplay = document.getElementById("score");
-let header = document.getElementById("header");
-let h1 = document.getElementById("h1");
-let canvas = document.getElementById("land");
-let canvasWraper = document.getElementById("canvas");
-let idAudio = document.getElementById("idAudio");
-let fullscreen = document.getElementById("fullOnOff");
-let soundOnOff = document.getElementById("soundOnOff");
-let display = document.getElementById("display"); // Выбор дисплэя
-let buttons = document.querySelectorAll(".button-form_btn");
-
-let userAnswer = 0; //по нажатию клавиши прибавляет к предыдущему вводу следуюю нажатую и по интеру проверяет ;
-let score = 0; // очки
-let HiScore = 0; // рекорд по очкам
-let operandFirst = "";
-let speed = 0; // скорость капель
 var op1 = [
   1,
   2,
@@ -54,6 +21,41 @@ var op1 = [
   20,
 ]; // первый операнд
 var op = ["+", "-", "*"]; // оператор
+var fall;
+
+const FILL_DARK_BLUE = "rgba(0,0,60, 0.5)";
+const FILL_BLUE = "rgba(0,0,155, 0.5)";
+const FILL_TURQUISE = "#22abcd";
+const FILL_ORANGE = "#f3d44a";
+const audioFone = document.getElementById("fone");
+const audioFalse = document.getElementById("false");
+const audioTrue = document.getElementById("true");
+const audioDrop = [document.getElementById("drop1"), document.getElementById("drop2"), document.getElementById("drop3")];
+
+let indices = [];
+let idAudio = document.getElementById("idAudio");
+let fullscreen = document.getElementById("fullOnOff");
+let soundOnOff = document.getElementById("soundOnOff");
+let display = document.getElementById("display"); // Выбор дисплэя
+let buttons = document.querySelectorAll(".button-form_btn");
+let displayScore = document.getElementById("Score");
+let displayHiScore = document.getElementById("HiScore");
+let displayWrongAnswer = document.getElementById("wrongAnswers");
+let startScreen = document.getElementById("startScreen");
+let playButton = document.getElementById("playButton");
+let howButton = document.getElementById("howButton");
+let option = document.getElementById("option");
+let scoreDisplay = document.getElementById("score");
+let header = document.getElementById("header");
+let h1 = document.getElementById("h1");
+let canvas = document.getElementById("land");
+let canvasWraper = document.getElementById("canvas");
+let HiScore = localStorage.getItem("HiScore"); // рекорд по очкам
+let userAnswer = 0; //по нажатию клавиши прибавляет к предыдущему вводу следуюю нажатую и по интеру проверяет ;
+let score = 0; // очки
+let wrongAnswer = 0;
+let operandFirst = "";
+let speed = 0; // скорость капель
 let answer = 0; // ответ
 let waterLevel = 9; // уровень воды для волн
 let waterLevelUp = 60; // уровень поднятия воды для капель
@@ -64,30 +66,31 @@ let isFullScreen = false;
 let c = canvas.getContext("2d");
 let x = 100;
 let y = 260;
-let indices = [];
-
-canvas.height = canvasWraper.offsetHeight; // на всю высоту экрана
-canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
-let ch = canvas.height;
-let cw = canvas.width;
-
+let ch = canvas.height = canvasWraper.offsetHeight;// на всю высоту экрана
+let cw = canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
 let frequency = 0.008;
 let amplitude = 10;
 let increment1 = frequency;
 let increment2 = frequency;
-let w = 0.5;
+let w = 2.5;
 
-var fall;
+displayHiScore.innerHTML = `<div id="HiScore">
+<img src="media/star.svg" alt="" />
+<span>HiScore: ${HiScore}</span>
+<img src="media/star.svg" alt="" />
+</div>`;
 
 playButton.addEventListener("click", () => {
   newGame();
 });
 
+howButton.addEventListener("click", () => {
+  howToPlay();
+});
+
 addEventListener("resize", () => {
-  canvas.height = canvasWraper.offsetHeight;
-  canvas.width = canvasWraper.offsetWidth;
-  ch = canvas.height;
-  cw = canvas.width;
+ch = canvas.height = canvasWraper.offsetHeight;// на всю высоту экрана
+cw = canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
 });
 
 addEventListener("keydown", buttonPress); // листнер - нажатия клавишь на Num-клавитуре
@@ -99,46 +102,33 @@ for (let i = 0; i < buttons.length; i++) {
 }
 
 function addScore() {
-  score += 100;
+  score += 20;
   audioTrue.playbackRate = 2.0; // ускоряет музыку
   play(audioTrue);
   audioTrue.currentTime = 0;
-  scoreDisplay.innerHTML = `<img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
+
   if (score > 100) {
-    drop1.speed = 2;
-    drop2.speed = 2;
-    drop3.speed = 2;
+    drop1.speed = drop2.speed = drop3.speed = 2;
     drop4.speed = 7;
   }
   if (score > 200) {
-    drop1.speed = 3;
-    drop2.speed = 3;
-    drop3.speed = 3;
+    drop1.speed = drop2.speed = drop3.speed = 3;
     drop4.speed = 7;
   }
   if (score > 300) {
-    drop1.speed = 4;
-    drop2.speed = 4;
-    drop3.speed = 4;
+    drop1.speed = drop2.speed = drop3.speed = 4;
     drop4.speed = 7;
   }
   if (score > 600) {
-    drop1.speed = 5;
-    drop2.speed = 5;
-    drop3.speed = 5;
+    drop1.speed = drop2.speed = drop3.speed = 5;
     drop4.speed = 7;
   }
   if (score > 900) {
-    drop1.speed = 6;
-    drop2.speed = 6;
-    drop3.speed = 6;
+    drop1.speed = drop2.speed = drop3.speed = 6;
     drop4.speed = 7;
   }
   if (score > 1200) {
-    drop1.speed = 7;
-    drop2.speed = 7;
-    drop3.speed = 7;
-    drop4.speed = 7;
+    drop1.speed = drop2.speed = drop3.speed = drop4.speed = 7;
   }
 }
 
@@ -194,8 +184,12 @@ function newGame() {
 }
 
 function gameOver() {
-  isPlayed = false; 
-  
+  if (localStorage.getItem("HiScore") > score) {
+    setStorage("Score", score);
+  } else {
+    setStorage("HiScore", score);
+  }
+  isPlayed = false;
   gamePause();
   while (dropAnswer.length > 0) {
     dropAnswer.pop();
@@ -214,13 +208,26 @@ function gameOver() {
   playButton.classList.add("start-screen-button-new-game");
   howButton.classList.add("start-screen-button-new-game");
   option.classList.add("option-new-game");
-  if (localStorage.getItem("HiScore") > localStorage.getItem("Score")) {
-    setStorage("Score", score);
-  } else {
-    setStorage("HiScore", score);
-  }
+  HiScore = localStorage.getItem("HiScore"); // рекорд по очкам
+  Score = localStorage.getItem("Score"); // рекорд по очкам
+  displayHiScore.innerHTML = `<div id="HiScore">
+    <img src="media/star.svg" alt="" />
+    <span>HiScore: ${HiScore}</span>
+    <img src="media/star.svg" alt="" />
+    </div>`;
+  displayScore.innerHTML = `<div id="Score">
+    <img src="media/star.svg" alt="" />
+    <span>Score: ${Score}</span>
+    <img src="media/star.svg" alt="" />
+    </div>`;
+    displayWrongAnswer.innerHTML = `<div id="Score">
+    <img src="media/star.svg" alt="" />
+    <span> Wrong Answer: ${wrongAnswer}</span>
+    <img src="media/star.svg" alt="" />
+    </div>`;
   clearInterval(fall);
 }
+
 function gamePause() {
   drop1.speed = 0;
   drop2.speed = 0;
@@ -277,12 +284,12 @@ fullscreen.addEventListener("click", () => {
 
 function drawBackground() {
   c.fillStyle = FILL_TURQUISE;
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  c.fillRect(0, 0, cw, ch);
   c.fill();
 
   var img = new Image(); // Создаём новый объект Image
   img.src = "media/stone.svg"; // Устанавливаем путь к источнику
-  c.drawImage(img, canvas.height / 25, canvas.height / 1.4, 600, 500); //рисуем картинку в канвас
+  c.drawImage(img, ch / 25, ch / 1.4, 600, 500); //рисуем картинку в канвас
 }
 
 function animateWave() {
@@ -331,9 +338,13 @@ function drawLand() {
   drop2.ypos = 0;
   drop3.ypos = 0;
   drop4.ypos = 0;
-  setStorage("Score", score);
+  console.log(drop1.ypos);
+  if (localStorage.getItem("HiScore") > score) {
+    setStorage("Score", score);
+  } else {
+    setStorage("HiScore", score);
+  }
   scoreDisplay.innerHTML = ` <img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
-
   if (waterLevel <= 7) {
     gameOver();
   }
@@ -420,13 +431,18 @@ class Drop {
     this.c.fillText(`${operand1}`, this.x, this.y + 40);
     this.c.closePath();
   }
-
+  get position( ) {
+    var yPosition = this.y;
+  }
   set xpos(xpos) {
     this.x = xpos;
   }
   set ypos(ypos) {
     this.y += ypos + this.speed;
   }
+  // set color(color) {
+  //   this.color = color;
+  // }
 }
 
 //особенная капля
@@ -470,11 +486,8 @@ class DropExp extends Drop {
 
 // сoздание новой капли из класса Drop
 let drop1 = new Drop({});
-
 let drop2 = new Drop({});
-
 let drop3 = new Drop({});
-
 let drop4 = new DropExp({});
 let dropAnswer = [drop1.answer, drop2.answer, drop3.answer, drop4.answer];
 
@@ -549,8 +562,8 @@ function buttonPress(e) {
         number.removeEventListener("click", buttonPress);
       }
       userAnswer += operandFirst; // Enter
-      console.log(`Вывожу userAnswer: ${+userAnswer}`);
-      chackAnswer(dropAnswer, +userAnswer);
+      //console.log(`Вывожу userAnswer: ${+userAnswer}`);
+      checkAnswer(dropAnswer, +userAnswer);
       userAnswer = "";
       operandFirst = "";
       display.value = "";
@@ -565,37 +578,33 @@ function buttonPress(e) {
   // вычисления после нажатия кнопки
 }
 
-
-
 var idx = dropAnswer.indexOf(+userAnswer);
 while (idx != -1) {
   indices.push(idx);
   idx = dropAnswer.indexOf(+userAnswer, idx + 1);
 }
 
-function chackAnswer(dropAnswer, userAnswer) {
+function checkAnswer(dropAnswer, userAnswer) {
   function logArrayElements(element, index) {
     if (userAnswer === element) {
       console.log(index);
       switch (index) {
         case 0:
-          drop1 = new Drop({
-            y: randomInt(-30, -550),
-          });
+          drop1 = new Drop({ y: randomInt(-30, -550) });
           dropAnswer.splice(index, 1, drop1.answer);
-          console.log(dropAnswer);
+          // console.log(dropAnswer);
           addScore();
           break;
         case 1:
           drop2 = new Drop({});
           dropAnswer.splice(index, 1, drop2.answer);
-          console.log(dropAnswer);
+          // console.log(dropAnswer);
           addScore();
           break;
         case 2:
           drop3 = new Drop({});
           dropAnswer.splice(index, 1, drop3.answer);
-          console.log(dropAnswer);
+          // console.log(dropAnswer);
           addScore();
           break;
         case 3:
@@ -607,30 +616,83 @@ function chackAnswer(dropAnswer, userAnswer) {
           dropAnswer.splice(2, 1, drop3.answer);
           drop4 = new DropExp({});
           dropAnswer.splice(3, 1, drop4.answer);
-          console.log(dropAnswer);
+          // console.log(dropAnswer);
           addScore();
           break;
       }
     }
   }
-
   if (dropAnswer.includes(+userAnswer)) {
     // addScore();
     dropAnswer.forEach(logArrayElements);
   } else {
+    wrongAnswer += 1;
+    console.log(wrongAnswer);
     if (score > 0) {
       score -= 20;
     }
     play(audioFalse);
     audioFalse.currentTime = 0;
-    
   }
 }
-// Hiscore не рапботает корректно 
-// функция показа очки и Hiscore в конце игры 
+// Hiscore не рапботает корректно
+// функция показа очки и Hiscore в конце игры
 
 // отключить листнер нажатия клавиш на клавиатуре
 
-// функция показать как надо играть 
-//// проверить if( drop.xpos === 0) { gamePause(); и вывести сообщение о том что надо делать }
-////  
+// функция показать как надо играть
+//!! проверить if( drop.xpos === 0) { gamePause(); и вывести сообщение о том что надо делать }
+
+function howToPlay() {
+  operandFirst = "";
+  display.value = "";
+  while (dropAnswer.length > 0) {
+    dropAnswer.pop();
+  }
+
+  drop1 = new Drop({});
+  drop2 = new Drop({});
+  drop3 = new Drop({});
+  drop4 = new DropExp({});
+  dropAnswer = [drop1.answer, drop2.answer, drop3.answer, drop4.answer];
+  console.log(dropAnswer);
+
+  drop1.answer;
+  drop2.answer;
+  drop3.answer;
+  drop4.answer;
+
+  drop1.y = randomInt(-30, -250);
+  drop2.y = randomInt(-30, -250);
+  drop3.y = randomInt(-30, -250);
+  drop4.y = randomInt(-30, -1050);
+  console.log(drop1.y);
+  //document.location.reload();
+  score = 0; // очки
+  scoreDisplay.innerHTML = `<img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
+  speed = 1; // скорость капель
+  answer = 0; // ответ
+  waterLevel = 10; // уровень воды для волн
+  waterLevelUp = 60; // уровень поднятия воды для капель
+  isPlayed = true; // игра запущена или нет
+  isPaused = false; //поставлена пауза
+  isMuted = true; // звук выключен или нет
+  elem = document.documentElement;
+  c = canvas.getContext("2d");
+  header.classList.remove("header-new-game");
+  h1.classList.remove("h1-new-game");
+  startScreen.classList.remove("start-screen-new-game");
+  playButton.classList.remove("start-screen-button-new-game");
+  howButton.classList.remove("start-screen-button-new-game");
+  option.classList.remove("option-new-game");
+  fall = setInterval(drawLand, 50);
+  drop1.speed = 6;
+  drop2.speed = 6;
+  drop3.speed = 6;
+  drop4.speed = 6;
+  if( drop4.y == 0) { 
+    gamePause();
+    console.log("ну что тут делать ?");
+  }
+}
+//
