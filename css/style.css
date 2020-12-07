@@ -97,7 +97,7 @@ header {
 .sound-off {
   width: 50px;
   height: 50px;
-  background: url(/media/SoundOff.svg);
+  background: url(https://raw.githubusercontent.com/enigmer2/raindrops/ff531dd41198644adf888d5514efb97fdaa3fd98/media/SoundOff.svg);
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
@@ -105,7 +105,7 @@ header {
 .sound-on {
   width: 50px;
   height: 50px;
-  background: url(/media/SoundOn.svg);
+  background: url(https://raw.githubusercontent.com/enigmer2/raindrops/ff531dd41198644adf888d5514efb97fdaa3fd98/media/SoundOn.svg);
   background-repeat: no-repeat;
   outline-style: none;
   border: none;
@@ -244,15 +244,13 @@ header {
 }
 
 .h1-new-game {
-  position: absolute;
-  top: 0%;
-  left: 0%;
+
   text-align: center;
   font-size: 10vw;
 }
 @media (min-width: 200px) and (max-width: 1024px) {
   .h1-new-game {
-    font-size: 18vw;
+    font-size: 15vw;
   }
 }
 .start-screen-new-game {
@@ -264,7 +262,7 @@ header {
 }
 .start-screen-button-new-game {
   display: inline-block;
-
+  padding: 10px;
   font-size: 10vw;
 }
 
@@ -276,5 +274,9 @@ header {
   right: 0;
   padding-top: 10px;
 }
-
+#score-wrapper{
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
 /* /\/\/\ стиль для начального экрана /\/\/\ */
