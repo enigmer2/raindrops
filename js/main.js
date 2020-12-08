@@ -22,6 +22,7 @@ var op1 = [
 ]; // первый операнд
 var op = ["+", "-", "*"]; // оператор
 var fall;
+var fall2;
 
 const FILL_DARK_BLUE = "rgba(0,0,60, 0.5)";
 const FILL_BLUE = "rgba(0,0,155, 0.5)";
@@ -30,7 +31,11 @@ const FILL_ORANGE = "#f3d44a";
 const audioFone = document.getElementById("fone");
 const audioFalse = document.getElementById("false");
 const audioTrue = document.getElementById("true");
-const audioDrop = [document.getElementById("drop1"), document.getElementById("drop2"), document.getElementById("drop3")];
+const audioDrop = [
+  document.getElementById("drop1"),
+  document.getElementById("drop2"),
+  document.getElementById("drop3"),
+];
 
 let indices = [];
 let idAudio = document.getElementById("idAudio");
@@ -66,8 +71,8 @@ let isFullScreen = false;
 let c = canvas.getContext("2d");
 let x = 100;
 let y = 260;
-let ch = canvas.height = canvasWraper.offsetHeight;// на всю высоту экрана
-let cw = canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
+let ch = (canvas.height = canvasWraper.offsetHeight); // на всю высоту экрана
+let cw = (canvas.width = canvasWraper.offsetWidth); // на всю ширину canvasWraper
 let frequency = 0.008;
 let amplitude = 10;
 let increment1 = frequency;
@@ -89,8 +94,8 @@ howButton.addEventListener("click", () => {
 });
 
 addEventListener("resize", () => {
-ch = canvas.height = canvasWraper.offsetHeight;// на всю высоту экрана
-cw = canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
+  ch = canvas.height = canvasWraper.offsetHeight; // на всю высоту экрана
+  cw = canvas.width = canvasWraper.offsetWidth; // на всю ширину canvasWraper
 });
 
 addEventListener("keydown", buttonPress); // листнер - нажатия клавишь на Num-клавитуре
@@ -172,6 +177,11 @@ function newGame() {
   startScreen.classList.remove("start-screen-new-game");
   playButton.classList.remove("start-screen-button-new-game");
   howButton.classList.remove("start-screen-button-new-game");
+
+  displayScore.classList.remove("score-new-game");
+  displayHiScore.classList.remove("hiscore-new-game");
+  displayWrongAnswer.classList.remove("wronganswers-new-game");
+
   option.classList.remove("option-new-game");
   fall = setInterval(drawLand, 50);
   drop1.speed = 1;
@@ -207,6 +217,11 @@ function gameOver() {
   startScreen.classList.add("start-screen-new-game");
   playButton.classList.add("start-screen-button-new-game");
   howButton.classList.add("start-screen-button-new-game");
+  
+  displayScore.classList.add("score-new-game");
+  displayHiScore.classList.add("hiscore-new-game");
+  displayWrongAnswer.classList.add("wronganswers-new-game");
+
   option.classList.add("option-new-game");
   HiScore = localStorage.getItem("HiScore"); // рекорд по очкам
   Score = localStorage.getItem("Score"); // рекорд по очкам
@@ -220,7 +235,7 @@ function gameOver() {
     <span>Score: ${Score}</span>
     <img src="media/star.svg" alt="" />
     </div>`;
-    displayWrongAnswer.innerHTML = `<div id="Score">
+  displayWrongAnswer.innerHTML = `<div id="Score">
     <img src="media/star.svg" alt="" />
     <span> Wrong Answer: ${wrongAnswer}</span>
     <img src="media/star.svg" alt="" />
@@ -338,7 +353,8 @@ function drawLand() {
   drop2.ypos = 0;
   drop3.ypos = 0;
   drop4.ypos = 0;
-  console.log(drop1.ypos);
+  drop1.howToPlay;
+
   if (localStorage.getItem("HiScore") > score) {
     setStorage("Score", score);
   } else {
@@ -399,6 +415,32 @@ class Drop {
       }
     }
   }
+
+  get howToPlay() {
+    if (isPaused) {
+      if (this.y >= 300) {
+        gamePause();
+        alert(" drops appear from above with arithmetic equations ");
+        alert(
+          " and you need to solve arithmetic equations and enter with keyboard or type on the virtual keyboard "
+        );
+        alert(
+          " if you do not have time to enter the answer and the drops touch the water 3 times - you have lost the game "
+        );
+        drop4.speed = 9;
+        drop3.speed = 9;
+        drop2.speed = 9;
+        this.ypos = -2000;
+        this.speed = 9;
+        alert(
+          " sometimes special drops will appear, the solution of which will clear the field of all drops "
+        );
+      }
+    }
+
+    return this.y;
+  }
+
   get drawDrop() {
     if (this.op1 > this.op2) {
       var operand1 = this.op2;
@@ -407,6 +449,7 @@ class Drop {
       var operand2 = this.op2;
       var operand1 = this.op1;
     }
+
     this.c.beginPath();
     this.c.fillStyle = FILL_BLUE;
     this.c.moveTo(this.x - 60, this.y);
@@ -431,8 +474,9 @@ class Drop {
     this.c.fillText(`${operand1}`, this.x, this.y + 40);
     this.c.closePath();
   }
-  get position( ) {
-    var yPosition = this.y;
+  get position() {
+    console.log(this.y);
+    return this.y;
   }
   set xpos(xpos) {
     this.x = xpos;
@@ -440,6 +484,7 @@ class Drop {
   set ypos(ypos) {
     this.y += ypos + this.speed;
   }
+
   // set color(color) {
   //   this.color = color;
   // }
@@ -644,55 +689,12 @@ function checkAnswer(dropAnswer, userAnswer) {
 //!! проверить if( drop.xpos === 0) { gamePause(); и вывести сообщение о том что надо делать }
 
 function howToPlay() {
-  operandFirst = "";
-  display.value = "";
-  while (dropAnswer.length > 0) {
-    dropAnswer.pop();
-  }
+  newGame();
+  isPaused = true
+  drop1.howToPlay;
 
-  drop1 = new Drop({});
-  drop2 = new Drop({});
-  drop3 = new Drop({});
-  drop4 = new DropExp({});
-  dropAnswer = [drop1.answer, drop2.answer, drop3.answer, drop4.answer];
-  console.log(dropAnswer);
-
-  drop1.answer;
-  drop2.answer;
-  drop3.answer;
-  drop4.answer;
-
-  drop1.y = randomInt(-30, -250);
-  drop2.y = randomInt(-30, -250);
-  drop3.y = randomInt(-30, -250);
-  drop4.y = randomInt(-30, -1050);
-  console.log(drop1.y);
-  //document.location.reload();
-  score = 0; // очки
-  scoreDisplay.innerHTML = `<img src="media/star.svg" alt="" /> <span>Score: ${score}</span>`;
-  speed = 1; // скорость капель
-  answer = 0; // ответ
-  waterLevel = 10; // уровень воды для волн
-  waterLevelUp = 60; // уровень поднятия воды для капель
-  isPlayed = true; // игра запущена или нет
-  isPaused = false; //поставлена пауза
-  isMuted = true; // звук выключен или нет
-  elem = document.documentElement;
-  c = canvas.getContext("2d");
-  header.classList.remove("header-new-game");
-  h1.classList.remove("h1-new-game");
-  startScreen.classList.remove("start-screen-new-game");
-  playButton.classList.remove("start-screen-button-new-game");
-  howButton.classList.remove("start-screen-button-new-game");
-  option.classList.remove("option-new-game");
-  fall = setInterval(drawLand, 50);
-  drop1.speed = 6;
-  drop2.speed = 6;
-  drop3.speed = 6;
-  drop4.speed = 6;
-  if( drop4.y == 0) { 
-    gamePause();
-    console.log("ну что тут делать ?");
-  }
+  drop1.speed = 7;
+  drop2.speed = 7;
+  drop3.speed = 7;
+  drop4.speed = 7;
 }
-//

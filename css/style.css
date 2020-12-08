@@ -279,3 +279,14 @@ header {
   flex-direction: column;
 }
 /* /\/\/\ стиль для начального экрана /\/\/\ */
+.score,
+.hiscore,
+.wronganswers{
+  display: none;
+}
+
+.score-new-game,
+.hiscore-new-game,
+.wronganswers-new-game{
+  display: block;
+}
